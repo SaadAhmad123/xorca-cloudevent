@@ -1,13 +1,13 @@
 import * as zod from 'zod';
 import { cleanString } from './utils';
 
-interface IXOrcaCloudEventSchemaGenerator {
+export interface IXOrcaCloudEventSchemaGenerator {
   type?: string;
   source?: string;
   data?: zod.AnyZodObject;
 }
 
-const XOrcaCloudEventSchemaGenerator = (
+export const XOrcaCloudEventSchemaGenerator = (
   params?: IXOrcaCloudEventSchemaGenerator,
 ) =>
   zod.object({
@@ -107,5 +107,3 @@ const XOrcaCloudEventSchemaGenerator = (
   });
 
 export const XOrcaCloudEventSchema = XOrcaCloudEventSchemaGenerator()
-
-export default XOrcaCloudEventSchemaGenerator;
