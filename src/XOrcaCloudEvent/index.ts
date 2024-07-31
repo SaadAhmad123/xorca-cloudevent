@@ -38,7 +38,7 @@ export default class XOrcaCloudEvent {
     this.source = encodeURI(event.source);
     this.datacontenttype =
       event.datacontenttype || 'application/cloudevents+json; charset=UTF-8; profile=xorca';
-    this.subject = event.subject;    
+    this.subject = event.subject;
     this.data = event.data;
     this.specversion = event.specversion || '1.0';
     this.to = event.to ? encodeURI(event.to) : null;
@@ -80,11 +80,11 @@ export default class XOrcaCloudEvent {
       "redirectto": this.redirectto,
       "traceparent": this.traceparent,
       "tracestate": this.tracestate,
-      "executionunits" : this.executionunits,
+      "executionunits": this.executionunits,
       "elapsedtime": this.elapsedtime
     }
   }
-  
+
   /**
    * Returns a list of all XOrca-specific extension field names.
    * 
@@ -105,16 +105,34 @@ export default class XOrcaCloudEvent {
       ...Object.entries(
         this.toJSON()
       )
-      .filter(([key]) => !this.extensionFields.includes(key))
-      .map(([key, value]) => ({[key]: value}))
+        .filter(([key]) => !this.extensionFields.includes(key))
+        .map(([key, value]) => ({ [key]: value }))
     ) as Omit<zod.infer<typeof XOrcaCloudEventSchema>, keyof typeof this.xorcaExtensions>
   }
 
   /**
-   * Convert the XOrca CloudEvent to the open CloudEvent
-   * object
+   * Converts the XOrca CloudEvent to the open CloudEvent object.
+   * @returns A CloudEvent instance representing this XOrcaCloudEvent.
    */
   toCloudEvent() {
     return new CloudEvent<Record<string, any>>(this.toJSON())
+  }
+
+  /**
+   * Generates OpenTelemetry attributes for the event.
+   * @returns An object containing OpenTelemetry attributes derived from the event.
+   */
+  openTelemetryAttributes() {
+    return {
+      'cloudevents.event_id': this.id || '',
+      'cloudevents.event_source': this.source || '',
+      'cloudevents.event_spec_version': this.specversion || '',
+      'cloudevents.event_subject': this.subject || '',
+      'cloudevents.event_type': this.type || '',
+      'cloudevents.xorca.event_redirectto': this.redirectto || '',
+      'cloudevents.xorca.event_to': this.to || '',
+      'cloudevents.xorca.event_executionunits': this.executionunits || '',
+      'cloudevents.xorca.event_elapsedtime': this.elapsedtime || '',
+    }
   }
 }
