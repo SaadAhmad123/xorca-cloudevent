@@ -4,7 +4,7 @@ import { cleanString } from './utils';
 export interface IXOrcaCloudEventSchemaGenerator {
   type?: string;
   source?: string;
-  data?: zod.AnyZodObject;
+  data?: zod.ZodTypeAny;
 }
 
 export const XOrcaCloudEventSchemaGenerator = (

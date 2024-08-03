@@ -10,7 +10,7 @@ import { CloudEvent } from 'cloudevents';
  *
  * @see https://github.com/cloudevents/spec/blob/v1.0/spec.md
  */
-export default class XOrcaCloudEvent {
+export default class XOrcaCloudEvent<TData extends Record<string, any> = Record<string, any>> {
   id: string;
   type: string;
   source: string;
@@ -18,7 +18,7 @@ export default class XOrcaCloudEvent {
   datacontenttype: "application/cloudevents+json; charset=UTF-8; profile=xorca";
   subject: string;
   time: string;
-  data: Record<string, any>;
+  data: TData;
   redirectto: string | null;
   to: string | null;
   traceparent: string | null;
@@ -39,7 +39,7 @@ export default class XOrcaCloudEvent {
     this.datacontenttype =
       event.datacontenttype || 'application/cloudevents+json; charset=UTF-8; profile=xorca';
     this.subject = event.subject;
-    this.data = event.data;
+    this.data = event.data as TData;
     this.specversion = event.specversion || '1.0';
     this.to = event.to ? encodeURI(event.to) : null;
     this.redirectto = event.redirectto ? encodeURI(event.redirectto) : null;
